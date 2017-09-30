@@ -14,6 +14,7 @@ class EstimatorNN(object):
         self.sample_labels = tf.placeholder(tf.float32,
                                             shape=self.labels.shape.as_list(),
                                             name="smaple_labels")
+        # single case and multi-samples are confusing to make a bug
         self.estimated_labels = neural_net(self.features,
                                            self.labels,
                                            name="estimated_labels")
