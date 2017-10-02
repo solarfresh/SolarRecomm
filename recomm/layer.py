@@ -48,6 +48,6 @@ def neural_net(features, label_size, dtype=tf.float32, name=None):
     """
 
     x = tf.convert_to_tensor(features, dtype=dtype)
-    w = tf.Variable(tf.random_normal([label_size, x.shape[0].value]), name="neural_net_weight"+ name)
-    b = tf.Variable(tf.random_normal([label_size,]), name="neural_net_bias" + name)
-    return tf.add(tf.matmul(w, x), b)
+    w = tf.Variable(tf.random_normal([x.shape[1].value, label_size]), name="neural_net_weight"+ name)
+    b = tf.Variable(tf.random_normal([label_size]), name="neural_net_bias" + name)
+    return tf.add(tf.matmul(x, w), b)

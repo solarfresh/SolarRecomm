@@ -5,19 +5,20 @@ from recomm.objective import cross_entropy
 
 
 class EstimatorNN(object):
-    def __init__(self, features, labels, dtype=tf.float32):
-        self.features = tf.convert_to_tensor(features, dtype=dtype)
-        self.labels = tf.convert_to_tensor(labels, dtype=dtype)
+    def __init__(self, features, labels):
+        self.features = features
+        self.labels = labels
         self.features_size = self.features.shape[1]
         if len(self.labels.shape) > 1:
             self.labels_size = self.labels[1]
         else:
             self.labels_size = 1
+            self.labels.shape = [self.labels.shape[0], 1]
         self.sample_features = tf.placeholder(tf.float32,
-                                              shape=[self.features_size, None],
+                                              shape=[None, self.features_size],
                                               name="sample_features")
         self.sample_labels = tf.placeholder(tf.float32,
-                                            shape=[self.labels_size, None],
+                                            shape=[None, self.labels_size],
                                             name="smaple_labels")
         self.estimated_labels = neural_net(self.sample_features,
                                            self.labels_size,
@@ -28,7 +29,7 @@ class EstimatorNN(object):
 
         self._index_in_epoch = 0
         self._epochs_completed = 0
-        self._sample_num = self.features.shape[0].value
+        self._sample_num = self.features.shape[0]
         self._features = self.features
         self._labels = self.labels
 
@@ -37,7 +38,7 @@ class EstimatorNN(object):
             sess.run(tf.global_variables_initializer())
             for _ in range(int(iter_max)):
                 sample_features, sample_labels = self._next_batch(batch_size)
-                _, loss = sess.run([self.solver],
+                _, loss = sess.run([self.solver, self.objective],
                                    feed_dict={self.sample_features: sample_features,
                                               self.sample_labels: sample_labels})
                 self.loss.append(loss)
