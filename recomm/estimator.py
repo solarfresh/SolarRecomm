@@ -8,15 +8,19 @@ class EstimatorNN(object):
     def __init__(self, features, labels, dtype=tf.float32):
         self.features = tf.convert_to_tensor(features, dtype=dtype)
         self.labels = tf.convert_to_tensor(labels, dtype=dtype)
+        self.features_size = self.features.shape[1]
+        if len(self.labels.shape) > 1:
+            self.labels_size = self.labels[1]
+        else:
+            self.labels_size = 1
         self.sample_features = tf.placeholder(tf.float32,
-                                              shape=self.features.shape.as_list(),
+                                              shape=[self.features_size, None],
                                               name="sample_features")
         self.sample_labels = tf.placeholder(tf.float32,
-                                            shape=self.labels.shape.as_list(),
+                                            shape=[self.labels_size, None],
                                             name="smaple_labels")
-        # single case and multi-samples are confusing to make a bug
-        self.estimated_labels = neural_net(self.features,
-                                           self.labels,
+        self.estimated_labels = neural_net(self.sample_features,
+                                           self.labels_size,
                                            name="estimated_labels")
         self.loss = []
         self.objective = cross_entropy(self.sample_labels, self.estimated_labels)
