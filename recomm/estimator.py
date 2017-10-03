@@ -4,7 +4,7 @@ from recomm.layer import neural_net
 from recomm.objective import cross_entropy
 
 
-class EstimatorNN(object):
+class ClassifierNN(object):
     def __init__(self, features, labels):
         self.features = features
         self.labels = labels
@@ -32,16 +32,16 @@ class EstimatorNN(object):
         self._sample_num = self.features.shape[0]
         self._features = self.features
         self._labels = self.labels
+        self._sess = tf.Session()
 
     def estimate(self, batch_size=100, iter_max=1e4):
-        with tf.Session() as sess:
-            sess.run(tf.global_variables_initializer())
-            for _ in range(int(iter_max)):
-                sample_features, sample_labels = self._next_batch(batch_size)
-                _, loss = sess.run([self.solver, self.objective],
-                                   feed_dict={self.sample_features: sample_features,
-                                              self.sample_labels: sample_labels})
-                self.loss.append(loss)
+        self._sess.run(tf.global_variables_initializer())
+        for _ in range(int(iter_max)):
+            sample_features, sample_labels = self._next_batch(batch_size)
+            _, loss = self._sess.run([self.solver, self.objective],
+                                     feed_dict={self.sample_features: sample_features,
+                                                self.sample_labels: sample_labels})
+            self.loss.append(loss)
         return self
 
     def get_loss(self):
@@ -52,6 +52,11 @@ class EstimatorNN(object):
             .train.AdamOptimizer(learning_rate=learning_rate)\
             .minimize(self.objective)
         return self
+
+    def predict(self, features):
+        predicted_label = self._sess.run([self.estimated_labels],
+                                         feed_dict={self.sample_features: features})
+        return predicted_label
 
     def _next_batch(self, batch_size, shuffle=True):
         """Return the next `batch_size` examples from this data set."""
