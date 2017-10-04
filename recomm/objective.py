@@ -9,5 +9,6 @@ def cross_entropy(sample_label, estimated_label):
     :param estimated_label: labels estimated from neural network
     :return: cross entropy
     """
-    return tf.nn.softmax_cross_entropy_with_logits(labels=sample_label,
-                                                   logits=estimated_label)
+    return tf.reduce_mean(
+        tf.nn.softmax_cross_entropy_with_logits(labels=sample_label,
+                                                logits=estimated_label))
