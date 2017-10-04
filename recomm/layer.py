@@ -49,6 +49,6 @@ def neural_net(features, label_size, dtype=tf.float32, name=None):
 
     #  To guarantee the size is integer
     feature_size = int(features.shape[1].value)
-    w = tf.Variable(tf.random_normal([feature_size, label_size]), name="neural_net_weight"+ name)
+    w = tf.Variable(tf.random_normal([feature_size, label_size]), name="neural_net_weight" + name)
     b = tf.Variable(tf.random_normal([label_size]), name="neural_net_bias" + name)
     return tf.add(tf.matmul(features, w), b)

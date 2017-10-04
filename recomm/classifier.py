@@ -22,10 +22,12 @@ class ClassifierNN(object):
                                             name="smaple_labels")
         self.estimated_labels = neural_net(self.sample_features,
                                            self.labels_size,
-                                           name="estimated_labels")
+                                           name="_estimated_labels")
         self.activated_labels = tf.nn.relu(self.estimated_labels, name="activated_labels")
-        self.loss = []
+        #  If the dimension is one only, cross entropy will be zero always.
+        #  This would be solved.
         self.objective = cross_entropy(self.sample_labels, self.activated_labels)
+        self.loss = []
         self.solver = None
 
         self._index_in_epoch = 0
