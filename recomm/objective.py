@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 
-def cross_entropy(sample_label, estimated_label):
+def cross_entropy(sample_label, estimated_label, activation="softmax"):
     """
     To describe the entropy of the samples satisfying the binary distribution
 
@@ -9,6 +9,11 @@ def cross_entropy(sample_label, estimated_label):
     :param estimated_label: labels estimated from neural network
     :return: cross entropy
     """
-    return tf.reduce_mean(
-        tf.nn.softmax_cross_entropy_with_logits(labels=sample_label,
-                                                logits=estimated_label))
+
+    entropy = {
+        "softmax": tf.nn.softmax_cross_entropy_with_logits,
+        "sigmoid": tf.nn.sigmoid_cross_entropy_with_logits,
+    }
+
+    return tf.reduce_mean(entropy[activation](labels=sample_label,
+                                              logits=estimated_label))

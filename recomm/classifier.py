@@ -23,12 +23,11 @@ class ClassifierNN(object):
         self.estimated_labels = neural_net(self.sample_features,
                                            self.labels_size,
                                            name="_estimated_labels")
-        self.activated_labels = tf.nn.relu(self.estimated_labels, name="activated_labels")
-        #  If the dimension is one only, cross entropy will be zero always.
-        #  This would be solved.
-        self.objective = cross_entropy(self.sample_labels, self.activated_labels)
-        self.loss = []
+        # It is meaningless if softmax is used because entroy will be 0 or 1 always and then
+        # the objective will be 0 only.
+        self.objective = cross_entropy(self.sample_labels, self.estimated_labels, activation="sigmoid")
         self.solver = None
+        self.loss = []
 
         self._index_in_epoch = 0
         self._epochs_completed = 0
