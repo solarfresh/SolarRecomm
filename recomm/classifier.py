@@ -9,8 +9,8 @@ class ClassifierNN(object):
         self.features = features
         self.labels = labels
         self.features_size = self.features.shape[1]
-        if len(self.labels.shape) > 1:
-            self.labels_size = self.labels[1]
+        if len(self.labels.shape[1:]) > 1:
+            self.labels_size = self.labels.shape[1]
         else:
             self.labels_size = 1
             self.labels.shape = [self.labels.shape[0], 1]
