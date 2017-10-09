@@ -4,7 +4,7 @@ from recomm.layer import neural_net
 from recomm.objective import cross_entropy
 
 
-class ClassifierNN(object):
+class ClassifierBase(object):
     def __init__(self, features, labels):
         self.features = features
         self.labels = labels
@@ -14,18 +14,7 @@ class ClassifierNN(object):
         except:
             self.labels_size = 1
             self.labels.shape = [self.labels.shape[0], 1]
-        self.sample_features = tf.placeholder(tf.float32,
-                                              shape=[None, self.features_size],
-                                              name="sample_features")
-        self.sample_labels = tf.placeholder(tf.float32,
-                                            shape=[None, self.labels_size],
-                                            name="smaple_labels")
-        self.estimated_labels = neural_net(self.sample_features,
-                                           self.labels_size,
-                                           name="_estimated_labels")
-        # It is meaningless if softmax is used because entroy will be 0 or 1 always and then
-        # the objective will be 0 only.
-        self.objective = cross_entropy(self.sample_labels, self.estimated_labels, activation="sigmoid")
+        self.objective = None
         self.solver = None
         self.loss = []
 
@@ -36,29 +25,11 @@ class ClassifierNN(object):
         self._labels = self.labels
         self._sess = tf.Session()
 
-    def estimate(self, batch_size=100, iter_max=1e4):
-        self._sess.run(tf.global_variables_initializer())
-        for _ in range(int(iter_max)):
-            sample_features, sample_labels = self._next_batch(batch_size)
-            _, loss = self._sess.run([self.solver, self.objective],
-                                     feed_dict={self.sample_features: sample_features,
-                                                self.sample_labels: sample_labels})
-            self.loss.append(loss)
-        return self
-
-    def get_loss(self):
-        return self.loss
-
     def optimize(self, learning_rate):
         self.solver = tf\
             .train.AdamOptimizer(learning_rate=learning_rate)\
             .minimize(self.objective)
         return self
-
-    def predict(self, features):
-        predicted_label = self._sess.run([self.estimated_labels],
-                                         feed_dict={self.sample_features: features})
-        return predicted_label
 
     def _next_batch(self, batch_size, shuffle=True):
         """Return the next `batch_size` examples from this data set."""
@@ -89,3 +60,36 @@ class ClassifierNN(object):
             self._index_in_epoch += batch_size
             end = self._index_in_epoch
             return self._features[start:end], self._labels[start:end]
+
+
+class ClassifierNN(ClassifierBase):
+    def __init__(self, *args, **kwargs):
+        ClassifierBase.__init__(self, *args, **kwargs)
+        self.sample_features = tf.placeholder(tf.float32,
+                                              shape=[None, self.features_size],
+                                              name="sample_features")
+        self.sample_labels = tf.placeholder(tf.float32,
+                                            shape=[None, self.labels_size],
+                                            name="smaple_labels")
+        self.estimated_labels = neural_net(self.sample_features,
+                                           self.labels_size,
+                                           name="_estimated_labels")
+        # It is meaningless if softmax is used because entroy will be 0 or 1 always and then
+        # the objective will be 0 only.
+        self.objective = cross_entropy(self.sample_labels, self.estimated_labels, activation="sigmoid")
+
+    def estimate(self, batch_size=100, iter_max=1e4):
+        self._sess.run(tf.global_variables_initializer())
+        for _ in range(int(iter_max)):
+            sample_features, sample_labels = self._next_batch(batch_size)
+            _, loss = self._sess.run([self.solver, self.objective],
+                                     feed_dict={self.sample_features: sample_features,
+                                                self.sample_labels: sample_labels})
+            self.loss.append(loss)
+        return self
+
+    def predict(self, features):
+        predicted_label = self._sess.run([self.estimated_labels],
+                                         feed_dict={self.sample_features: features})
+        return predicted_label
+
