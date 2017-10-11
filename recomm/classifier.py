@@ -14,6 +14,13 @@ class ClassifierBase(object):
         except:
             self.labels_size = 1
             self.labels.shape = [self.labels.shape[0], 1]
+        self.sample_features = tf.placeholder(tf.float32,
+                                              shape=[None, self.features_size],
+                                              name="sample_features")
+        self.sample_labels = tf.placeholder(tf.float32,
+                                            shape=[None, self.labels_size],
+                                            name="smaple_labels")
+        self.estimated_labels = None
         self.objective = None
         self.solver = None
         self.loss = []
@@ -30,6 +37,21 @@ class ClassifierBase(object):
             .train.AdamOptimizer(learning_rate=learning_rate)\
             .minimize(self.objective)
         return self
+
+    def estimate(self, batch_size=100, iter_max=1e4):
+        self._sess.run(tf.global_variables_initializer())
+        for _ in range(int(iter_max)):
+            sample_features, sample_labels = self._next_batch(batch_size)
+            _, loss = self._sess.run([self.solver, self.objective],
+                                     feed_dict={self.sample_features: sample_features,
+                                                self.sample_labels: sample_labels})
+            self.loss.append(loss)
+        return self
+
+    def predict(self, features):
+        predicted_label = self._sess.run([self.estimated_labels],
+                                         feed_dict={self.sample_features: features})
+        return predicted_label
 
     def _next_batch(self, batch_size, shuffle=True):
         """Return the next `batch_size` examples from this data set."""
@@ -62,34 +84,39 @@ class ClassifierBase(object):
             return self._features[start:end], self._labels[start:end]
 
 
+class ClassifierDNN(ClassifierBase):
+    def __init__(self, *args, **kwargs):
+        ClassifierBase.__init__(self, *args, **kwargs)
+        self.hidden_neurons = []
+        self.estimated_labels = None
+
+    def build_network(self, hidden_layers=None):
+        #  Build hidden layers
+        prev_neuron_size = self.features_size
+        self.hidden_neurons.append(self.sample_features)
+        for idx, layer_size in enumerate(hidden_layers):
+            self.hidden_neurons.append(neural_net(self.hidden_neurons[idx],
+                                                  layer_size,
+                                                  name="_estimated_neurons_{}".format(idx)))
+        #  Connect to labels
+        self.estimated_labels = neural_net(self.hidden_neurons[len(hidden_layers)],
+                                           self.labels_size,
+                                           name="_estimated_labels")
+        return self
+
+
 class ClassifierNN(ClassifierBase):
     def __init__(self, *args, **kwargs):
         ClassifierBase.__init__(self, *args, **kwargs)
-        self.sample_features = tf.placeholder(tf.float32,
-                                              shape=[None, self.features_size],
-                                              name="sample_features")
-        self.sample_labels = tf.placeholder(tf.float32,
-                                            shape=[None, self.labels_size],
-                                            name="smaple_labels")
+
+    def build_network(self):
         self.estimated_labels = neural_net(self.sample_features,
                                            self.labels_size,
                                            name="_estimated_labels")
+        return self
+
+    def set_objective(self):
         # It is meaningless if softmax is used because entroy will be 0 or 1 always and then
         # the objective will be 0 only.
         self.objective = cross_entropy(self.sample_labels, self.estimated_labels, activation="sigmoid")
-
-    def estimate(self, batch_size=100, iter_max=1e4):
-        self._sess.run(tf.global_variables_initializer())
-        for _ in range(int(iter_max)):
-            sample_features, sample_labels = self._next_batch(batch_size)
-            _, loss = self._sess.run([self.solver, self.objective],
-                                     feed_dict={self.sample_features: sample_features,
-                                                self.sample_labels: sample_labels})
-            self.loss.append(loss)
         return self
-
-    def predict(self, features):
-        predicted_label = self._sess.run([self.estimated_labels],
-                                         feed_dict={self.sample_features: features})
-        return predicted_label
-
