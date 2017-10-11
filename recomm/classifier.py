@@ -32,12 +32,6 @@ class ClassifierBase(object):
         self._labels = self.labels
         self._sess = tf.Session()
 
-    def optimize(self, learning_rate):
-        self.solver = tf\
-            .train.AdamOptimizer(learning_rate=learning_rate)\
-            .minimize(self.objective)
-        return self
-
     def estimate(self, batch_size=100, iter_max=1e4):
         self._sess.run(tf.global_variables_initializer())
         for _ in range(int(iter_max)):
@@ -48,10 +42,22 @@ class ClassifierBase(object):
             self.loss.append(loss)
         return self
 
+    def optimize(self, learning_rate):
+        self.solver = tf\
+            .train.AdamOptimizer(learning_rate=learning_rate)\
+            .minimize(self.objective)
+        return self
+
     def predict(self, features):
         predicted_label = self._sess.run([self.estimated_labels],
                                          feed_dict={self.sample_features: features})
         return predicted_label
+
+    def set_objective(self):
+        # It is meaningless if softmax is used because entroy will be 0 or 1 always and then
+        # the objective will be 0 only.
+        self.objective = cross_entropy(self.sample_labels, self.estimated_labels, activation="sigmoid")
+        return self
 
     def _next_batch(self, batch_size, shuffle=True):
         """Return the next `batch_size` examples from this data set."""
@@ -113,10 +119,4 @@ class ClassifierNN(ClassifierBase):
         self.estimated_labels = neural_net(self.sample_features,
                                            self.labels_size,
                                            name="_estimated_labels")
-        return self
-
-    def set_objective(self):
-        # It is meaningless if softmax is used because entroy will be 0 or 1 always and then
-        # the objective will be 0 only.
-        self.objective = cross_entropy(self.sample_labels, self.estimated_labels, activation="sigmoid")
         return self
