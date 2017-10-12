@@ -24,6 +24,8 @@ class ClassifierBase(object):
         self.objective = None
         self.solver = None
         self.loss = []
+        self.accuracy = None
+        self.predicted_label = None
 
         self._index_in_epoch = 0
         self._epochs_completed = 0
@@ -31,6 +33,14 @@ class ClassifierBase(object):
         self._features = self.features
         self._labels = self.labels
         self._sess = tf.Session()
+
+    def activate_label(self):
+        activated_labels = []
+        for data in self.predicted_label[0]:
+            activated_labels.append(np.where(data < data.max(), 0, 1))
+        activated_labels = np.array(activated_labels)
+        self.predicted_label = activated_labels
+        return self
 
     def estimate(self, batch_size=100, iter_max=1e4):
         self._sess.run(tf.global_variables_initializer())
@@ -42,6 +52,12 @@ class ClassifierBase(object):
             self.loss.append(loss)
         return self
 
+    def get_accuracy(self, test_labels):
+        error = np.linalg.norm((test_labels - self.predicted_label) / np.sqrt(2), axis=1).sum()
+        error /= test_labels.shape[0]
+        self.accuracy = 1.0 - error
+        return self
+
     def optimize(self, learning_rate):
         self.solver = tf\
             .train.AdamOptimizer(learning_rate=learning_rate)\
@@ -49,9 +65,9 @@ class ClassifierBase(object):
         return self
 
     def predict(self, features):
-        predicted_label = self._sess.run([self.estimated_labels],
-                                         feed_dict={self.sample_features: features})
-        return predicted_label
+        self.predicted_label = self._sess.run([self.estimated_labels],
+                                              feed_dict={self.sample_features: features})
+        return self
 
     def set_objective(self):
         # It is meaningless if softmax is used because entroy will be 0 or 1 always and then
