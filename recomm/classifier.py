@@ -22,6 +22,7 @@ class ClassifierBase(object):
                                             name="smaple_labels")
         self.estimated_labels = None
         self.objective = None
+        self.learning_rate = tf.placeholder(tf.float32, shape=[])
         self.solver = None
         self.loss = []
         self.accuracy = None
@@ -42,14 +43,19 @@ class ClassifierBase(object):
         self.predicted_label = activated_labels
         return self
 
-    def estimate(self, batch_size=100, iter_max=1e4, init=True):
+    def estimate(self,
+                 batch_size=100,
+                 iter_max=1e4,
+                 learning_rate=1e-2,
+                 init=True):
         if init:
             self._sess.run(tf.global_variables_initializer())
         for _ in range(int(iter_max)):
             sample_features, sample_labels = self._next_batch(batch_size)
             _, loss = self._sess.run([self.solver, self.objective],
                                      feed_dict={self.sample_features: sample_features,
-                                                self.sample_labels: sample_labels})
+                                                self.sample_labels: sample_labels,
+                                                self.learning_rate: learning_rate})
             self.loss.append(loss)
         return self
 
@@ -59,9 +65,9 @@ class ClassifierBase(object):
         self.accuracy = 1.0 - error
         return self
 
-    def optimize(self, learning_rate):
+    def optimize(self):
         self.solver = tf\
-            .train.AdamOptimizer(learning_rate=learning_rate)\
+            .train.AdamOptimizer(learning_rate=self.learning_rate)\
             .minimize(self.objective)
         return self
 
