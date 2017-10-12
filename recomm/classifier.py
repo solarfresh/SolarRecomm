@@ -42,8 +42,9 @@ class ClassifierBase(object):
         self.predicted_label = activated_labels
         return self
 
-    def estimate(self, batch_size=100, iter_max=1e4):
-        self._sess.run(tf.global_variables_initializer())
+    def estimate(self, batch_size=100, iter_max=1e4, init=True):
+        if init:
+            self._sess.run(tf.global_variables_initializer())
         for _ in range(int(iter_max)):
             sample_features, sample_labels = self._next_batch(batch_size)
             _, loss = self._sess.run([self.solver, self.objective],
@@ -112,18 +113,27 @@ class ClassifierDNN(ClassifierBase):
         self.hidden_neurons = []
         self.estimated_labels = None
 
-    def build_network(self, hidden_layers=None):
+    def build_network(self, hidden_layers=None, activate=None):
         #  Build hidden layers
         prev_neuron_size = self.features_size
         self.hidden_neurons.append(self.sample_features)
         for idx, layer_size in enumerate(hidden_layers):
-            self.hidden_neurons.append(neural_net(self.hidden_neurons[idx],
-                                                  layer_size,
-                                                  name="_estimated_neurons_{}".format(idx)))
+            estimated_labels = neural_net(self.hidden_neurons[idx],
+                                          layer_size,
+                                          name="_estimated_neurons_{}".format(idx))
+            if activate:
+                self.hidden_neurons.append(tf.sigmoid(estimated_labels,
+                                                      name="activated_neurons_{}".format(idx)))
+            else:
+                self.hidden_neurons.append(estimated_labels)
         #  Connect to labels
-        self.estimated_labels = neural_net(self.hidden_neurons[len(hidden_layers)],
-                                           self.labels_size,
-                                           name="_estimated_labels")
+        estimated_labels = neural_net(self.hidden_neurons[len(hidden_layers)],
+                                      self.labels_size,
+                                      name="_estimated_labels")
+        if activate:
+            self.estimated_labels = tf.sigmoid(estimated_labels, name="activated_neurons")
+        else:
+            self.estimated_labels = estimated_labels
         return self
 
 
