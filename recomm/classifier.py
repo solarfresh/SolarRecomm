@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 from recomm.layer import neural_net
-from recomm.objective import cross_entropy
+from recomm.objective import cross_entropy, l2_loss
 
 
 class ClassifierBase(object):
@@ -76,10 +76,13 @@ class ClassifierBase(object):
                                               feed_dict={self.sample_features: features})
         return self
 
-    def set_objective(self):
+    def set_objective(self, method="entropy"):
         # It is meaningless if softmax is used because entroy will be 0 or 1 always and then
         # the objective will be 0 only.
-        self.objective = cross_entropy(self.sample_labels, self.estimated_labels, activation="sigmoid")
+        self.objective = {
+            "entropy": cross_entropy(self.sample_labels, self.estimated_labels, activation="sigmoid"),
+            "l2_loss": l2_loss(self.sample_labels, self.estimated_labels),
+        }[method]
         return self
 
     def _next_batch(self, batch_size, shuffle=True):

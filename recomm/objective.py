@@ -17,3 +17,7 @@ def cross_entropy(sample_label, estimated_label, activation="softmax"):
 
     return tf.reduce_mean(entropy[activation](labels=sample_label,
                                               logits=estimated_label))
+
+
+def l2_loss(sample_label, estimated_label):
+    return tf.nn.l2_loss(tf.subtract(sample_label, estimated_label))
