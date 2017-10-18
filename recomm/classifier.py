@@ -76,6 +76,10 @@ class ClassifierBase(object):
         return self
 
     def predict(self, features):
+        try:
+            _ = features.shape[1]
+        except:
+            features.shape = features.shape + (1,)
         self.predicted_label = self._sess.run([self.estimated_labels],
                                               feed_dict={self.sample_features: features})
         return self
