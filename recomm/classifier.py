@@ -8,12 +8,16 @@ class ClassifierBase(object):
     def __init__(self, features, labels):
         self.features = features
         self.labels = labels
-        self.features_size = self.features.shape[1]
+        try:
+            self.features_size = self.features.shape[1]
+        except:
+            self.features_size = 1
+            self.features.shape = self.features.shape + (1,)
         try:
             self.labels_size = self.labels.shape[1]
         except:
             self.labels_size = 1
-            self.labels.shape = [self.labels.shape[0], 1]
+            self.labels.shape = self.labels.shape + (1,)
         self.sample_features = tf.placeholder(tf.float32,
                                               shape=[None, self.features_size],
                                               name="sample_features")
@@ -72,6 +76,10 @@ class ClassifierBase(object):
         return self
 
     def predict(self, features):
+        try:
+            _ = features.shape[1]
+        except:
+            features.shape = features.shape + (1,)
         self.predicted_label = self._sess.run([self.estimated_labels],
                                               feed_dict={self.sample_features: features})
         return self
@@ -150,8 +158,12 @@ class ClassifierNN(ClassifierBase):
     def __init__(self, *args, **kwargs):
         ClassifierBase.__init__(self, *args, **kwargs)
 
-    def build_network(self):
-        self.estimated_labels = neural_net(self.sample_features,
-                                           self.labels_size,
-                                           name="_estimated_labels")
+    def build_network(self, activate=None):
+        estimated_labels = neural_net(self.sample_features,
+                                      self.labels_size,
+                                      name="_estimated_labels")
+        if activate:
+            self.estimated_labels = tf.sigmoid(estimated_labels, name="activated_neurons")
+        else:
+            self.estimated_labels = estimated_labels
         return self
