@@ -8,12 +8,16 @@ class ClassifierBase(object):
     def __init__(self, features, labels):
         self.features = features
         self.labels = labels
-        self.features_size = self.features.shape[1]
+        try:
+            self.features_size = self.features.shape[1]
+        except:
+            self.features_size = 1
+            self.features.shape = self.features.shape + (1,)
         try:
             self.labels_size = self.labels.shape[1]
         except:
             self.labels_size = 1
-            self.labels.shape = [self.labels.shape[0], 1]
+            self.labels.shape = self.labels.shape + (1,)
         self.sample_features = tf.placeholder(tf.float32,
                                               shape=[None, self.features_size],
                                               name="sample_features")
