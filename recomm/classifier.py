@@ -154,8 +154,12 @@ class ClassifierNN(ClassifierBase):
     def __init__(self, *args, **kwargs):
         ClassifierBase.__init__(self, *args, **kwargs)
 
-    def build_network(self):
-        self.estimated_labels = neural_net(self.sample_features,
-                                           self.labels_size,
-                                           name="_estimated_labels")
+    def build_network(self, activate=None):
+        estimated_labels = neural_net(self.sample_features,
+                                      self.labels_size,
+                                      name="_estimated_labels")
+        if activate:
+            self.estimated_labels = tf.sigmoid(estimated_labels, name="activated_neurons")
+        else:
+            self.estimated_labels = estimated_labels
         return self
