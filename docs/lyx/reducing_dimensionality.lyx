@@ -1,0 +1,353 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section*
+Reducing Dimensionality
+\end_layout
+
+\begin_layout Subsection*
+Principal Component Analysis
+\end_layout
+
+\begin_layout Standard
+PCA which assuming the original data set has been drawn from a Gaussian
+ distribution allows to obtain an ordered list of components that account
+ for the largest amount of the variance from the data in terms of least
+ square errors: The amount of variance captured by the first component is
+ larger than the amount of variance on the second component and so on.
+\end_layout
+
+\begin_layout Standard
+Consider a data matrix, 
+\begin_inset Formula $\bm{X}$
+\end_inset
+
+, with column-wise 
+\emph on
+zero empirical mean
+\emph default
+ (the sample mean of each column has been shifted to zero), where each of
+ the 
+\begin_inset Formula $n$
+\end_inset
+
+ rows represents a different repetition of the experiment, and each of the
+ 
+\begin_inset Formula $p$
+\end_inset
+
+ columns gives a particular kind of feature.
+ Mathematically, the transformation is defined by a set of 
+\begin_inset Formula $p$
+\end_inset
+
+-dimensional vectors of weights or loadings 
+\begin_inset Formula $\bm{w}_{\left(k\right)}=\left(w_{1},\cdots,w_{p}\right)_{\left(k\right)}$
+\end_inset
+
+ that map each row vector 
+\begin_inset Formula $\bm{x}_{\left(i\right)}$
+\end_inset
+
+ of 
+\begin_inset Formula $\bm{X}$
+\end_inset
+
+ to a new vector of principal component scores given by 
+\begin_inset Formula $\bm{t}_{\left(i\right)}=\left(t_{1},\cdots,t_{m}\right)_{\left(i\right)}$
+\end_inset
+
+, given by
+\begin_inset Formula 
+\[
+t_{k\left(i\right)}=\bm{x}_{\left(i\right)}\cdot\bm{w}_{\left(k\right)}
+\]
+
+\end_inset
+
+where each loading vector 
+\begin_inset Formula $\bm{w}$
+\end_inset
+
+ constrained to be a 
+\emph on
+unit vector
+\emph default
+.
+\end_layout
+
+\begin_layout Subsubsection*
+First component
+\end_layout
+
+\begin_layout Standard
+The first loading vector satisfies:
+\begin_inset Formula 
+\[
+\bm{w}_{\left(1\right)}=\arg\max\left\{ \frac{\bm{w}^{T}\bm{X}^{T}\bm{X}\bm{w}}{\bm{w}^{T}\bm{w}}\right\} 
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Further components
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Formula $k^{th}$
+\end_inset
+
+ component can be found by subtracting the first 
+\begin_inset Formula $k−1$
+\end_inset
+
+ principal components from 
+\begin_inset Formula $\bm{X}$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+\hat{\bm{X}}_{k}=\bm{X}-\sum_{s=1}^{k-1}\bm{X}\bm{w}_{\left(s\right)}\bm{w}_{\left(s\right)}^{T}
+\]
+
+\end_inset
+
+and then finding the loading vector which extracts the maximum variance
+ from this new data matrix
+\begin_inset Formula 
+\[
+\bm{w}_{\left(k\right)}=\arg\max\left\{ \frac{\bm{w}^{T}\bm{\hat{X}}_{k}^{T}\hat{\bm{X}}_{k}\bm{w}}{\bm{w}^{T}\bm{w}}\right\} 
+\]
+
+\end_inset
+
+The full principal components decomposition of 
+\begin_inset Formula $\bm{X}$
+\end_inset
+
+ can therefore be given as
+\begin_inset Formula 
+\[
+\bm{T}=\bm{X}\bm{W}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\bm{W}$
+\end_inset
+
+ is a 
+\begin_inset Formula $p$
+\end_inset
+
+-by-
+\begin_inset Formula $p$
+\end_inset
+
+ matrix whose columns are the eigenvectors of 
+\begin_inset Formula $\bm{X}^{T}\bm{X}$
+\end_inset
+
+.
+ The transpose of 
+\begin_inset Formula $\bm{W}$
+\end_inset
+
+ is sometimes called the 
+\emph on
+whitening
+\emph default
+ or 
+\emph on
+sphering transformation
+\emph default
+.
+\end_layout
+
+\begin_layout Subsubsection*
+Dimensionality reduction
+\end_layout
+
+\begin_layout Standard
+Keeping only the first 
+\begin_inset Formula $L$
+\end_inset
+
+ principal components, produced by using only the first 
+\begin_inset Formula $L$
+\end_inset
+
+ loading vectors, gives the truncated transformation
+\begin_inset Formula 
+\[
+\bm{T}_{L}=\bm{X}\bm{W}_{L}
+\]
+
+\end_inset
+
+where the matrix 
+\begin_inset Formula $\bm{T}_{L}$
+\end_inset
+
+ now has 
+\begin_inset Formula $n$
+\end_inset
+
+ rows but only 
+\begin_inset Formula $L$
+\end_inset
+
+ columns.
+\end_layout
+
+\begin_layout Subsection*
+Singular Value Decomposition
+\end_layout
+
+\begin_layout Standard
+In linear algebra, the singular-value decomposition (SVD) is a factorization
+ of a real or complex matrix.
+ It is the generalization of the eigendecomposition of a 
+\emph on
+positive semidefinite normal matrix
+\emph default
+ (for example, a symmetric matrix with positive eigenvalues) to any 
+\begin_inset Formula $m\times n$
+\end_inset
+
+ matrix via an extension of the polar decomposition
+\begin_inset Formula 
+\[
+\bm{M}=\bm{U}\bm{\Sigma}\bm{V}^{\dagger}
+\]
+
+\end_inset
+
+with the properties:
+\end_layout
+
+\begin_layout Itemize
+The left-singular vectors of 
+\begin_inset Formula $\bm{M}$
+\end_inset
+
+ are a set of orthonormal eigenvectors of 
+\begin_inset Formula $\bm{M}\bm{M}^{\dagger}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+The right-singular vectors of 
+\begin_inset Formula $\bm{M}$
+\end_inset
+
+ are a set of orthonormal eigenvectors of 
+\begin_inset Formula $\bm{M}^{\dagger}\bm{M}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+The non-zero singular values of 
+\begin_inset Formula $\bm{M}$
+\end_inset
+
+ (found on the diagonal entries of 
+\begin_inset Formula $\bm{\Sigma}$
+\end_inset
+
+) are the square roots of the non-zero eigenvalues of both 
+\begin_inset Formula $\bm{M}^{\dagger}\bm{M}$
+\end_inset
+
+ and 
+\begin_inset Formula $\bm{M}\bm{M}^{\dagger}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+It has many useful applications in signal processing and statistics.
+\end_layout
+
+\end_body
+\end_document
