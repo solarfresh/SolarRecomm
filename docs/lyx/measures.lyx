@@ -1,0 +1,442 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section*
+Similarity Measures
+\end_layout
+
+\begin_layout Subsection*
+Continuous Case
+\end_layout
+
+\begin_layout Subsubsection*
+Euclidean Distance
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+The length of the shortest possible path through space between two point
+ that could be taken if there were no obstacles
+\emph default
+:
+\begin_inset Formula 
+\[
+d\left(x,\,y\right)=\sqrt{\sum_{k=1}^{n}\left(x_{k}-y_{k}\right)^{2}}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $n$
+\end_inset
+
+ is the number of dimensions (attributes) and 
+\begin_inset Formula $x_{k}$
+\end_inset
+
+ and 
+\begin_inset Formula $y_{k}$
+\end_inset
+
+ are the 
+\begin_inset Formula $k^{th}$
+\end_inset
+
+ attributes (components) of data objects 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $y$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection*
+Minkowski Distance
+\end_layout
+
+\begin_layout Standard
+This is a generalization of Euclidean Distance:
+\begin_inset Formula 
+\[
+d\left(x,\,y\right)=\left(\sum_{k=1}^{n}\left|x_{k}-y_{k}\right|^{r}\right)^{\frac{1}{r}}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $r$
+\end_inset
+
+ is the degree of the distance.
+\end_layout
+
+\begin_layout Subsubsection*
+Mahalanobis Distance
+\end_layout
+
+\begin_layout Standard
+The Mahalanobis distance is defined as:
+\begin_inset Formula 
+\[
+d\left(x,\,y\right)=\sqrt{\left(x-y\right)\bm{\sigma}^{-1}\left(x-y\right)^{T}}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\bm{\sigma}^{-1}$
+\end_inset
+
+ is the covariance matrix of the data.
+\end_layout
+
+\begin_layout Itemize
+For 
+\begin_inset Formula $r=1$
+\end_inset
+
+, the 
+\emph on
+city block
+\emph default
+, (
+\emph on
+Manhattan
+\emph default
+, 
+\emph on
+taxicab
+\emph default
+ or 
+\emph on
+L1 norm
+\emph default
+) distance.
+\end_layout
+
+\begin_layout Itemize
+For 
+\begin_inset Formula $r=2$
+\end_inset
+
+, the 
+\emph on
+Euclidean
+\emph default
+ distance.
+\end_layout
+
+\begin_layout Itemize
+For 
+\begin_inset Formula $r=\infty$
+\end_inset
+
+, the 
+\emph on
+supremum
+\emph default
+ (
+\begin_inset Formula $L_{max}$
+\end_inset
+
+ 
+\emph on
+norm
+\emph default
+ or 
+\begin_inset Formula $L_{\infty}$
+\end_inset
+
+ 
+\emph on
+norm
+\emph default
+) distance
+\end_layout
+
+\begin_layout Subsubsection*
+Cosine Similarity
+\end_layout
+
+\begin_layout Standard
+The similarity is computed as the cosine of the angle that they form:
+\begin_inset Formula 
+\[
+\cos\left(x,\,y\right)=\frac{\bm{x}\cdot\bm{y}}{\left\Vert \bm{x}\right\Vert \left\Vert \bm{y}\right\Vert }
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\cdot$
+\end_inset
+
+ indicates vector dot product and 
+\begin_inset Formula $\left\Vert \bm{x}\right\Vert $
+\end_inset
+
+ is the norm of vector 
+\begin_inset Formula $\bm{x}$
+\end_inset
+
+.
+ This is also known as the 
+\emph on
+L2 Norm
+\emph default
+.
+ 
+\emph on
+The term is used as the cosine of the angle only as a convenient mechanism
+ for calculating the angle itself and is no part of the meaning.
+\end_layout
+
+\begin_layout Subsubsection*
+Pearson Correlation
+\end_layout
+
+\begin_layout Standard
+Pearson correlation uses:
+\begin_inset Formula 
+\[
+Pearson\left(x,\,y\right)=\frac{\Sigma\left(x,\,y\right)}{\sigma_{x}\sigma_{y}}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\Sigma$
+\end_inset
+
+ is the covariance of data points 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $y$
+\end_inset
+
+, and 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ is the standard deviation.
+ The Pearson correlation is 
+\begin_inset Formula $+1$
+\end_inset
+
+ in the case of a perfect direct (increasing) linear relationship (correlation),
+ 
+\begin_inset Formula $−1$
+\end_inset
+
+ in the case of a perfect decreasing (inverse) linear relationship (anticorrelat
+ion), and some value in the open interval 
+\begin_inset Formula $\left(\text{−}1,\,1\right)$
+\end_inset
+
+ in all other cases, indicating the degree of linear dependence between
+ the variables.
+ As it approaches zero there is less of a relationship (closer to uncorrelated).
+ The closer the coefficient is to either 
+\begin_inset Formula $−1$
+\end_inset
+
+ or 
+\begin_inset Formula $1$
+\end_inset
+
+, the stronger the correlation between the variables.
+\end_layout
+
+\begin_layout Subsection*
+Binary Case
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $M_{xy}$
+\end_inset
+
+ is the number of attributes presented by 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $y$
+\end_inset
+
+ which are binary numbers 
+\begin_inset Formula $0$
+\end_inset
+
+ or 
+\begin_inset Formula $1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection*
+Simple Matching coefficient
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+SMC=\frac{M_{00}+M_{11}}{M_{00}+M_{11}+M_{01}+M_{10}}
+\]
+
+\end_inset
+
+The simple matching distance (SMD), which measures dissimilarity between
+ sample sets, is given by 
+\begin_inset Formula $1-SMC$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection*
+Jaccard coefficient
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+The Jaccard index
+\emph default
+, also known as 
+\emph on
+Intersection
+\emph default
+ over Union and the
+\emph on
+ Jaccard similarity coefficient
+\emph default
+ is a statistic used for comparing the 
+\emph on
+similarity
+\emph default
+ and 
+\emph on
+diversity
+\emph default
+ of sample sets:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+JC=\frac{M_{11}}{M_{11}+M_{01}+M_{10}}
+\]
+
+\end_inset
+
+The 
+\emph on
+Jaccard distance
+\emph default
+, which measures dissimilarity between sample sets, is complementary to
+ the Jaccard coefficient and is obtained by subtracting the Jaccard coefficient
+ from 
+\begin_inset Formula $1$
+\end_inset
+
+, or, equivalently, by dividing the difference of the sizes of the union
+ and the intersection of two sets by the size of the union 
+\begin_inset Formula $1-JC$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection*
+Extended Jaccard (Tanimoto) coefficient
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+d=\frac{\bm{x}\cdot\bm{y}}{\left\Vert \bm{x}\right\Vert ^{2}+\left\Vert \bm{y}\right\Vert ^{2}-\bm{x}\cdot\bm{y}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
