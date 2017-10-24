@@ -1,0 +1,209 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section*
+k-Means
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $k$
+\end_inset
+
+-Means clustering is a partitioning method.
+ The function partitions the data set of 
+\begin_inset Formula $N$
+\end_inset
+
+ items into 
+\begin_inset Formula $k$
+\end_inset
+
+ disjoint subsets 
+\begin_inset Formula $S_{j}$
+\end_inset
+
+ that contain 
+\begin_inset Formula $N_{j}$
+\end_inset
+
+ items so that they are as close to each other as possible according a given
+ distance measure.
+ Each cluster in the partition is defined by its 
+\begin_inset Formula $N_{j}$
+\end_inset
+
+ members and by its centroid 
+\begin_inset Formula $\lambda_{j}$
+\end_inset
+
+.
+ The centroid for each cluster is the point to which the sum of distances
+ from all items in that cluster is minimized.
+ Thus, we can define the 
+\begin_inset Formula $k$
+\end_inset
+
+-means algorithm as an iterative process to minimize 
+\begin_inset Formula $E=\sum_{1}^{k}\sum_{n\in S_{j}}d\left(x_{n},\lambda_{j}\right)$
+\end_inset
+
+ , where 
+\begin_inset Formula $x_{n}$
+\end_inset
+
+ is a vector representing the 
+\begin_inset Formula $n^{th}$
+\end_inset
+
+ item, 
+\begin_inset Formula $λ_{j}$
+\end_inset
+
+ is the centroid of the item in 
+\begin_inset Formula $S_{j}$
+\end_inset
+
+ and 
+\begin_inset Formula $d$
+\end_inset
+
+ is the distance measure.
+ The 
+\begin_inset Formula $k$
+\end_inset
+
+-means algorithm moves items between clusters until 
+\begin_inset Formula $E$
+\end_inset
+
+ cannot be decreased further.
+\end_layout
+
+\begin_layout Subsection*
+Algorithm
+\end_layout
+
+\begin_layout Enumerate
+The algorithm works by randomly selecting 
+\begin_inset Formula $k$
+\end_inset
+
+ centroids.
+\end_layout
+
+\begin_layout Enumerate
+All items are assigned to the cluster whose centroid is the closest to them.
+\end_layout
+
+\begin_layout Enumerate
+The new cluster centroid needs to be updated to account for the items who
+ have been added or removed from the cluster and the membership of the items
+ to the cluster updated.
+\end_layout
+
+\begin_layout Enumerate
+This operation continues until there are no further items that change their
+ cluster membership.
+\end_layout
+
+\begin_layout Subsection*
+Shortcomings
+\end_layout
+
+\begin_layout Itemize
+it assumes prior knowledge of the data in order to choose the appropriate
+ 
+\begin_inset Formula $k$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+the final clusters are very sensitive to the selection of the initial centroids;
+\end_layout
+
+\begin_layout Itemize
+it can produce empty cluster
+\end_layout
+
+\begin_layout Itemize
+it has problems when clusters are of differing sizes, densities, and non-globula
+r shapes
+\end_layout
+
+\begin_layout Itemize
+it also has problems when the data contains outliers
+\end_layout
+
+\end_body
+\end_document
