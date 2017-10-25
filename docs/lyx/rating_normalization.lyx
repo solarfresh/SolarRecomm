@@ -1,0 +1,224 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section*
+Rating Normalization
+\end_layout
+
+\begin_layout Standard
+Two of the most popular rating normalization schemes that have been proposed
+ to convert individual ratings to a more universal scale are mean-centering
+ and Z-score.
+\end_layout
+
+\begin_layout Subsection*
+Mean-centering
+\end_layout
+
+\begin_layout Standard
+The idea of mean-centering is to determine whether a rating is positive
+ or negative by comparing it to the mean rating.
+ A raw rating 
+\begin_inset Formula $r_{ui}$
+\end_inset
+
+ is transformation to a mean-centered one 
+\begin_inset Formula $h(r_{ui})$
+\end_inset
+
+ by subtracting to 
+\begin_inset Formula $r_{ui}$
+\end_inset
+
+ the average 
+\begin_inset Formula $r_{u}$
+\end_inset
+
+ of the ratings given by user 
+\begin_inset Formula $u$
+\end_inset
+
+ to the items:
+\begin_inset Formula 
+\[
+h\left(r_{ui}\right)=r_{ui}-\bar{r}_{u}
+\]
+
+\end_inset
+
+Using this approach the user-based prediction of a rating 
+\begin_inset Formula $r_{ui}$
+\end_inset
+
+ is obtained as
+\begin_inset Formula 
+\[
+\hat{r}_{ui}=\bar{r}_{u}+\frac{\sum w_{uv}\left(r_{vi}-\bar{r}_{v}\right)}{\sum\left|w_{uv}\right|}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Z-score normalization
+\end_layout
+
+\begin_layout Standard
+Consider, two users 
+\begin_inset Formula $A$
+\end_inset
+
+ and 
+\begin_inset Formula $B$
+\end_inset
+
+ that both have an average rating of 
+\begin_inset Formula $3$
+\end_inset
+
+.
+ Moreover, suppose that the ratings of 
+\begin_inset Formula $A$
+\end_inset
+
+ alternate between 
+\begin_inset Formula $1$
+\end_inset
+
+ and 
+\begin_inset Formula $5$
+\end_inset
+
+, while those of 
+\begin_inset Formula $B$
+\end_inset
+
+ are always 
+\begin_inset Formula $3$
+\end_inset
+
+.
+ A rating of 
+\begin_inset Formula $5$
+\end_inset
+
+ given to an item by 
+\begin_inset Formula $B$
+\end_inset
+
+ is more exceptional than the same rating given by 
+\begin_inset Formula $A$
+\end_inset
+
+, and, thus, reflects a greater appreciation for this item.
+ While mean-centering removes the offsets caused by the different perceptions
+ of an average rating, Zscore normalization also considers the spread in
+ the individual rating scales.
+\end_layout
+
+\begin_layout Standard
+In user-based methods, the normalization of a rating 
+\begin_inset Formula $r_{ui}$
+\end_inset
+
+ divides the user-mean-centered rating by the standard deviation 
+\begin_inset Formula $σ_{u}$
+\end_inset
+
+ of the ratings given by user 
+\begin_inset Formula $u$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+h\left(r_{ui}\right)=\frac{r_{ui}-\bar{r}_{u}}{\sigma_{u}}
+\]
+
+\end_inset
+
+A user-based prediction of rating rui using this normalization approach
+ would therefore be obtained as
+\begin_inset Formula 
+\[
+\hat{r}_{ui}=\bar{r}_{u}+\sigma_{u}\frac{\sum w_{uv}\left(r_{vi}-\bar{r}_{v}\right)/\sigma_{v}}{\sum\left|w_{uv}\right|}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
