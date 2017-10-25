@@ -1,0 +1,275 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section*
+User-based Rating Prediction
+\end_layout
+
+\begin_layout Standard
+User-based neighborhood recommendation methods predict the rating 
+\begin_inset Formula $r_{ui}$
+\end_inset
+
+ of a user 
+\begin_inset Formula $u$
+\end_inset
+
+ for a new item 
+\begin_inset Formula $i$
+\end_inset
+
+ using the ratings given to 
+\begin_inset Formula $i$
+\end_inset
+
+ by users most similar to 
+\begin_inset Formula $u$
+\end_inset
+
+, called nearest-neighbors.
+ Suppose we have for each user 
+\begin_inset Formula $v\neq u$
+\end_inset
+
+ a value 
+\begin_inset Formula $w_{uv}$
+\end_inset
+
+ representing the preference similarity between 
+\begin_inset Formula $u$
+\end_inset
+
+ and 
+\begin_inset Formula $v$
+\end_inset
+
+.
+ The k-nearest-neighbors (k-NN) of 
+\begin_inset Formula $u$
+\end_inset
+
+, denoted by 
+\begin_inset Formula $N(u)$
+\end_inset
+
+, are the 
+\begin_inset Formula $k$
+\end_inset
+
+ users 
+\begin_inset Formula $v$
+\end_inset
+
+ with the highest similarity 
+\begin_inset Formula $w_{uv}$
+\end_inset
+
+ to 
+\begin_inset Formula $u$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Only the users who have rated item 
+\begin_inset Formula $i$
+\end_inset
+
+ can be used in the prediction of 
+\begin_inset Formula $r_{ui}$
+\end_inset
+
+, and we instead consider the 
+\begin_inset Formula $k$
+\end_inset
+
+ users most similar to 
+\begin_inset Formula $u$
+\end_inset
+
+ that have rated 
+\begin_inset Formula $i$
+\end_inset
+
+.
+ We write this set of neighbors as 
+\begin_inset Formula $N_{i}(u)$
+\end_inset
+
+.
+ The rating 
+\begin_inset Formula $r_{ui}$
+\end_inset
+
+ can be estimated as the average rating given to 
+\begin_inset Formula $i$
+\end_inset
+
+ by these neighbors:
+\begin_inset Formula 
+\[
+\hat{r}_{ui}=\frac{1}{\left|N_{i}\left(u\right)\right|}\sum r_{vi}
+\]
+
+\end_inset
+
+A problem is that is does not take into account the fact that the neighbors
+ can have different levels of similarity.
+ A common solution to this problem is to weigh the contribution of each
+ neighbor by its similarity to 
+\begin_inset Formula $u$
+\end_inset
+
+.
+ However, if these weights do not sum to 
+\begin_inset Formula $1$
+\end_inset
+
+, the predicted ratings can be well outside the range of allowed values.
+ Consequently, it is customary to normalize these weights, such that the
+ predicted rating becomes
+\begin_inset Formula 
+\[
+\hat{r}_{ui}=\frac{\sum w_{uv}r_{vi}}{\sum\left|w_{uv}\right|}
+\]
+
+\end_inset
+
+
+\begin_inset Formula $|w_{uv}|$
+\end_inset
+
+ is used instead of 
+\begin_inset Formula $w_{uv}$
+\end_inset
+
+ because negative weights can produce ratings outside the allowed range.
+ Also, 
+\begin_inset Formula $w_{uv}$
+\end_inset
+
+ can be replaced by 
+\begin_inset Formula $w_{uv}^{α}$
+\end_inset
+
+ , where 
+\begin_inset Formula $α>0$
+\end_inset
+
+ is an amplification factor.
+ When 
+\begin_inset Formula $α>1$
+\end_inset
+
+, as is it most often employed, an even greater importance is given to the
+ neighbors that are the closest to 
+\begin_inset Formula $u$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The fact that users may use different rating values to quantify the same
+ level of appreciation for an item.
+ For example, one user may give the highest rating value to only a few outstandi
+ng items, while a less difficult one may give this value to most of the
+ items he likes.
+ This problem is usually addressed by converting the neighbors’ ratings
+ 
+\begin_inset Formula $r_{vi}$
+\end_inset
+
+ to normalized ones 
+\begin_inset Formula $h(r_{vi})$
+\end_inset
+
+, giving the following prediction:
+\begin_inset Formula 
+\[
+\hat{r}_{ui}=h^{-1}\left(\frac{\sum w_{uv}h\left(r_{vi}\right)}{\sum\left|w_{uv}\right|}\right)
+\]
+
+\end_inset
+
+Note that the predicted rating must be converted back to the original scale,
+ hence the 
+\begin_inset Formula $h^{−1}$
+\end_inset
+
+ in the equation.
+\end_layout
+
+\end_body
+\end_document
