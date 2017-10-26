@@ -1,0 +1,275 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section*
+Time changing baseline predictors
+\end_layout
+
+\begin_layout Standard
+A template for a time sensitive baseline predictor for 
+\begin_inset Formula $u$
+\end_inset
+
+’s rating of 
+\begin_inset Formula $i$
+\end_inset
+
+ at day 
+\begin_inset Formula $t_{ui}$
+\end_inset
+
+ reads:
+\begin_inset Formula 
+\[
+b_{ui}=\mu+b_{u}\left(t_{ui}\right)+b_{i}\left(t_{ui}\right)
+\]
+
+\end_inset
+
+Here, 
+\begin_inset Formula $b_{u}$
+\end_inset
+
+ and 
+\begin_inset Formula $b_{i}$
+\end_inset
+
+ are real valued functions that change over time.
+ It adequate to split the item biases into time-based bins, using a constant
+ item bias for each time period.
+ The decision of how to split the timeline into bins should balance the
+ desire to achieve finer resolution (hence, smaller bins) with the need
+ for enough ratings per bin (hence, larger bins).
+ A day 
+\begin_inset Formula $t$
+\end_inset
+
+ is associated with an integer Bin(
+\begin_inset Formula $t$
+\end_inset
+
+) (a number between 
+\begin_inset Formula $1$
+\end_inset
+
+ and 
+\begin_inset Formula $30$
+\end_inset
+
+ in our data), such that the movie bias is split into a stationary part
+ and a time changing part
+\begin_inset Formula 
+\[
+b_{i}\left(t\right)=b_{i}+b_{i,\,\text{Bin}\left(t\right)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+One simple modeling choice uses a linear function to capture a possible
+ gradual drift of user bias.
+ For each user 
+\begin_inset Formula $u$
+\end_inset
+
+, we denote the mean date of rating by tu.
+ Now, if 
+\begin_inset Formula $u$
+\end_inset
+
+ rated a movie on day 
+\begin_inset Formula $t$
+\end_inset
+
+, then the associated time deviation of this rating is defined as
+\begin_inset Formula 
+\[
+\text{dev}_{u}(t)=\text{sign}(t\text{−}t_{u})\text{·}|t\text{−}t_{u}|^{β}.
+\]
+
+\end_inset
+
+Here 
+\begin_inset Formula $|t−t_{u}|$
+\end_inset
+
+ measures the number of days between dates 
+\begin_inset Formula $t$
+\end_inset
+
+ and 
+\begin_inset Formula $t_{u}$
+\end_inset
+
+, and the value of 
+\begin_inset Formula $β$
+\end_inset
+
+ is set by cross validation.
+ A time-dependent user-bias is obtained
+\begin_inset Formula 
+\[
+b_{u}^{\left(1\right)}\left(t\right)=b_{u}+\alpha_{u}\cdot\text{dev}_{u}\left(t\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A more flexible parameterization is offered by splines.
+ Let 
+\begin_inset Formula $u$
+\end_inset
+
+ be a user associated with 
+\begin_inset Formula $n_{u}$
+\end_inset
+
+ ratings.
+ We designate 
+\begin_inset Formula $k_{u}$
+\end_inset
+
+ time points – 
+\begin_inset Formula $\left\{ t_{1}^{u},\cdots,t_{k_{u}}^{u}\right\} $
+\end_inset
+
+ – spaced uniformly across the dates of 
+\begin_inset Formula $u$
+\end_inset
+
+’s ratings as kernels that control the following function
+\begin_inset Formula 
+\[
+b_{u}^{\left(2\right)}\left(t\right)=b_{u}+\frac{\sum e^{-\sigma\left|t\text{−}t_{u}\right|}b_{t_{1}}^{u}}{\sum e^{-\sigma\left|t\text{−}t_{u}\right|}}
+\]
+
+\end_inset
+
+The parameters 
+\begin_inset Formula $b_{t_{l}}^{u}$
+\end_inset
+
+ are associated with the control points (or, kernels), and are automatically
+ learned from the data.
+\end_layout
+
+\begin_layout Standard
+Beyond the temporal effects described so far, one can use the same methodology
+ to capture more effects.
+ A primary example is capturing periodic effects.
+\begin_inset Formula 
+\[
+b_{i}\left(t\right)=b_{i}+b_{i,\,\text{Bin}\left(t\right)}+b_{i,\,\text{period}\left(t\right)}
+\]
+
+\end_inset
+
+Another temporal effect within the scope of basic predictors is related
+ to the changing scale of user ratings.
+ While 
+\begin_inset Formula $b_{i}(t)$
+\end_inset
+
+ is a user-independent measure for the merit of item 
+\begin_inset Formula $i$
+\end_inset
+
+ at time 
+\begin_inset Formula $t$
+\end_inset
+
+, users tend to respond to such a measure differently.
+ To address this, we add a time-dependent scaling feature to the baseline
+ predictors, denoted by 
+\begin_inset Formula $c_{u}(t)$
+\end_inset
+
+.
+ Thus, the baseline predictor
+\begin_inset Formula 
+\[
+b_{ui}\left(t\right)=\mu+b_{u}+\alpha_{u}\cdot\text{dev}_{u}\left(t_{ui}\right)+b_{u,t_{ui}}+\left(b_{i}+b_{i,\,\text{Bin}\left(t_{ui}\right)}\right)\cdot c_{u}\left(t_{ui}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
