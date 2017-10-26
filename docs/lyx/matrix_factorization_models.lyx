@@ -1,0 +1,204 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section*
+Matrix factorization models
+\end_layout
+
+\begin_layout Standard
+Each item 
+\begin_inset Formula $i$
+\end_inset
+
+ is associated with a vector 
+\begin_inset Formula $q_{i}$
+\end_inset
+
+, and each user 
+\begin_inset Formula $u$
+\end_inset
+
+ is associated with a vector 
+\begin_inset Formula $p_{u}$
+\end_inset
+
+.
+ For a given item 
+\begin_inset Formula $i$
+\end_inset
+
+, the elements of 
+\begin_inset Formula $q_{i}$
+\end_inset
+
+ measure the extent to which the item possesses those factors, positive
+ or negative.
+ For a given user 
+\begin_inset Formula $u$
+\end_inset
+
+, the elements of 
+\begin_inset Formula $p_{u}$
+\end_inset
+
+ measure the extent of interest the user has in items that are high on the
+ corresponding factors (again, these may be positive or negative).
+ The resulting dot product, 
+\begin_inset Formula $q_{i}^{T}p_{u}$
+\end_inset
+
+, captures the interaction between user 
+\begin_inset Formula $u$
+\end_inset
+
+ and item 
+\begin_inset Formula $i$
+\end_inset
+
+—i.e., the overall interest of the user in characteristics of the item.
+ The final rating is created by also adding in the aforementioned baseline
+ predictors that depend only on the user or item.
+ Thus, a rating is predicted by the rule
+\begin_inset Formula 
+\[
+\hat{r}_{ui}=\mu+b_{i}+b_{u}+q_{i}^{T}p_{u}
+\]
+
+\end_inset
+
+In order to learn the model parameters, we minimize the regularized squared
+ error
+\begin_inset Formula 
+\[
+\min_{b^{*},q^{*},p^{*}}\sum\left(r_{ui}-\mu-b_{i}-b_{u}-q_{i}^{T}p_{u}\right)^{2}+\lambda_{4}\left(b_{i}^{2}+b_{u}^{2}+\left\Vert q_{i}\right\Vert ^{2}+\left\Vert p_{u}\right\Vert ^{2}\right)
+\]
+
+\end_inset
+
+The constant 
+\begin_inset Formula $\lambda_{4}$
+\end_inset
+
+ which controls the extent of regularization, is usually determined by cross
+ validation.
+ Minimization is typically performed by either stochastic gradient descent
+ or alternating least squares.
+\end_layout
+
+\begin_layout Standard
+Several types of implicit feedback can be simultaneously introduced into
+ the model by using extra sets of item factors.
+ For example, if a user 
+\begin_inset Formula $u$
+\end_inset
+
+ has a certain kind of implicit preference to the items in 
+\begin_inset Formula $N_{1}(u)$
+\end_inset
+
+ (e.g., she rented them), and a different type of implicit feedback to the
+ items in 
+\begin_inset Formula $N_{2}(u)$
+\end_inset
+
+ (e.g., she browsed them), we could use the model
+\begin_inset Formula 
+\[
+\hat{r}_{ui}=\mu+b_{i}+b_{u}+q_{i}^{T}\left(p_{u}+\left|N_{1}\left(u\right)\right|^{-\frac{1}{2}}\sum y_{j}^{\left(1\right)}+\left|N_{2}\left(u\right)\right|^{-\frac{1}{2}}\sum y_{j}^{\left(2\right)}\right)
+\]
+
+\end_inset
+
+with the factor vectors 
+\begin_inset Formula $y_{j}^{\left(k\right)}$
+\end_inset
+
+ which represents the perspective of implicit feedback.
+ Since the 
+\begin_inset Formula $y_{j}$
+\end_inset
+
+ are centered around zero (by the regularization), the sum is normalized
+ by 
+\begin_inset Formula $|R(u)|^{−\frac{1}{2}}$
+\end_inset
+
+, in order to stabilize its variance across the range of observed values
+ of 
+\begin_inset Formula $|R(u)|$
+\end_inset
+
+.
+\end_layout
+
+\end_body
+\end_document
